@@ -114,7 +114,7 @@ export default function AnalyticsDashboard() {
           {/* Overdue Tickets - Red Style */}
           <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
             <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-[#881337]">Overdue Tickets</p>
+              <p className="text-[13px] font-semibold text-[#881337]">Tickets Vencidos</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
                 <AlertCircle size={14} className="text-[#BE123C]" />
               </div>
@@ -127,7 +127,7 @@ export default function AnalyticsDashboard() {
           {/* Tickets Due Today - White Style */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col justify-between relative min-h-[120px]">
             <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-gray-500">Tickets Due Today</p>
+              <p className="text-[13px] font-semibold text-gray-500">Vencen Hoy</p>
             </div>
             <h3 className="text-4xl font-bold text-blue-600 mt-2">
               {isLoading ? "..." : "0"}
@@ -137,7 +137,7 @@ export default function AnalyticsDashboard() {
           {/* Open Tickets - Red Style */}
           <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
             <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-[#881337]">Open tickets</p>
+              <p className="text-[13px] font-semibold text-[#881337]">Tickets Abiertos</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
                 <AlertCircle size={14} className="text-[#BE123C]" />
               </div>
@@ -150,7 +150,7 @@ export default function AnalyticsDashboard() {
           {/* Tickets On Hold - Red Style */}
           <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
             <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-[#881337]">Tickets On Hold</p>
+              <p className="text-[13px] font-semibold text-[#881337]">En Espera</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
                 <AlertCircle size={14} className="text-[#BE123C]" />
               </div>
@@ -163,7 +163,7 @@ export default function AnalyticsDashboard() {
           {/* Unassigned Tickets - Red Style */}
           <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
             <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-[#881337]">Unassigned Tickets</p>
+              <p className="text-[13px] font-semibold text-[#881337]">Sin Asignar</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
                 <AlertCircle size={14} className="text-[#BE123C]" />
               </div>
@@ -176,7 +176,7 @@ export default function AnalyticsDashboard() {
           {/* Tickets I'm Watching - White Style */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col justify-between relative min-h-[120px]">
             <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-gray-500">Tickets I'm Watching</p>
+              <p className="text-[13px] font-semibold text-gray-500">Tickets en Seguimiento</p>
             </div>
             <h3 className="text-4xl font-bold text-blue-600 mt-2">
               {isLoading ? "..." : "0"}

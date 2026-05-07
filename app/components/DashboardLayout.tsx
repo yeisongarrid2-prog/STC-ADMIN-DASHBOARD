@@ -127,7 +127,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               trigger={
                 <button className="bg-gray-800 hover:bg-gray-900 text-white px-3 py-1.5 rounded-md shadow-sm transition-colors text-sm font-medium flex items-center gap-1.5 ml-2">
                   <Plus size={16} />
-                  <span className="hidden sm:inline">New</span>
+                  <span className="hidden sm:inline">Nuevo</span>
                 </button>
               }
             >
