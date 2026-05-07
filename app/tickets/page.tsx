@@ -8,10 +8,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import { useTicketStore } from "../store/ticketStore";
+import { useTicketStore, Ticket } from "../store/ticketStore";
 import { fetchGlpiTickets } from "@/lib/glpi/service";
 import { toast } from "sonner";
 import { Skeleton } from "../components/ui/Skeleton";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Suspense } from "react";
 const statusStyles: Record<string, string> = {
   "Nuevo": "bg-blue-50 text-blue-700 border-blue-200",
   "En curso": "bg-amber-50 text-amber-700 border-amber-200",
@@ -25,10 +27,26 @@ const priorityStyles: Record<string, string> = {
   "Baja": "text-slate-600 bg-slate-50",
 };
 
-export default function TicketsPage() {
+const views = [
+  { id: 'all', label: 'Todas las Solicitudes', icon: <Filter size={16} /> },
+  { id: 'abiertos', label: 'Tickets Abiertos', icon: <div className="w-2 h-2 rounded-full bg-blue-500" /> },
+  { id: 'en-curso', label: 'En Curso', icon: <div className="w-2 h-2 rounded-full bg-amber-500" /> },
+  { id: 'resueltos', label: 'Resueltos', icon: <div className="w-2 h-2 rounded-full bg-green-500" /> },
+  { id: 'vencidos', label: 'Tickets Vencidos', icon: <div className="w-2 h-2 rounded-full bg-red-500" /> },
+  { id: 'hoy', label: 'Vencen Hoy', icon: <div className="w-2 h-2 rounded-full bg-orange-400" /> },
+  { id: 'sin-asignar', label: 'Sin Asignar', icon: <div className="w-2 h-2 rounded-full bg-gray-400" /> },
+];
+
+function TicketsContent() {
   const { tickets, setTickets } = useTicketStore();
   const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showViewMenu, setShowViewMenu] = useState(false);
+  
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const currentViewId = searchParams.get('view') || 'all';
+  const currentView = views.find(v => v.id === currentViewId) || views[0];
 
   const loadTickets = async (silent = false) => {
     if (!silent) setIsLoading(true);
@@ -48,13 +66,22 @@ export default function TicketsPage() {
     loadTickets();
   }, []);
 
-  const toggleSelectAll = () => {
-    if (selectedTickets.length === tickets.length) {
-      setSelectedTickets([]);
-    } else {
-      setSelectedTickets(tickets.map(t => t.id));
+  const filteredTickets = tickets.filter(t => {
+    if (currentViewId === 'all') return true;
+    if (currentViewId === 'abiertos') return t.status === 'Abierto';
+    if (currentViewId === 'en-curso') return t.status === 'En curso';
+    if (currentViewId === 'resueltos') return t.status === 'Resuelto';
+    if (currentViewId === 'sin-asignar') return t.assignee === 'Sin asignar';
+    if (currentViewId === 'vencidos') {
+      // Lógica simple para vencidos (simulación si no hay fecha real)
+      return t.status !== 'Cerrado' && t.status !== 'Resuelto'; 
     }
-  };
+    if (currentViewId === 'hoy') {
+      const today = new Date().toLocaleDateString();
+      return t.dueDate === today;
+    }
+    return true;
+  });
 
   const toggleTicket = (id: string) => {
     setSelectedTickets(prev => 
@@ -62,20 +89,56 @@ export default function TicketsPage() {
     );
   };
 
+  const toggleSelectAll = () => {
+    if (selectedTickets.length === filteredTickets.length) {
+      setSelectedTickets([]);
+    } else {
+      setSelectedTickets(filteredTickets.map(t => t.id));
+    }
+  };
+
+  const setView = (viewId: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('view', viewId);
+    router.push(`/tickets?${params.toString()}`);
+    setShowViewMenu(false);
+  };
+
   return (
     <div className="p-6 sm:p-8 lg:p-10 h-full flex flex-col">
       {/* Header & View Selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-        <div className="flex items-center gap-2 cursor-pointer group">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-blue-600">
-              <path d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-1.35 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+        <div className="relative">
+          <div 
+            className="flex items-center gap-2 cursor-pointer group"
+            onClick={() => setShowViewMenu(!showViewMenu)}
+          >
+            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-blue-600">
+                <path d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-1.35 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <h1 className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors flex items-center gap-1">
+              {currentView.label} <ChevronDown size={18} className={`text-gray-400 transition-transform ${showViewMenu ? 'rotate-180' : ''}`} />
+            </h1>
           </div>
-          <h1 className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors flex items-center gap-1">
-            Todas las Solicitudes <ChevronDown size={18} className="text-gray-400" />
-          </h1>
-          <Filter size={16} className="text-blue-500 ml-2" />
+
+          {showViewMenu && (
+            <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-2">
+              {views.map(view => (
+                <button
+                  key={view.id}
+                  onClick={() => setView(view.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors
+                    ${currentViewId === view.id ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-600 hover:bg-gray-50'}
+                  `}
+                >
+                  {view.icon}
+                  {view.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-4 text-sm">
           <button 
@@ -151,7 +214,7 @@ export default function TicketsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {isLoading && tickets.length === 0 ? (
+              {isLoading && filteredTickets.length === 0 ? (
                 Array.from({ length: 8 }).map((_, i) => (
                   <tr key={`skeleton-${i}`}>
                     <td colSpan={8} className="py-4 px-4">
@@ -162,20 +225,20 @@ export default function TicketsPage() {
                     </td>
                   </tr>
                 ))
-              ) : tickets.length === 0 ? (
+              ) : filteredTickets.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-10 text-center text-gray-500">
-                    No se encontraron solicitudes en GLPI.
+                    No se encontraron solicitudes para esta vista.
                   </td>
                 </tr>
               ) : (
-                tickets.map((ticket) => (
+                filteredTickets.map((ticket) => (
                   <tr key={ticket.id} className="hover:bg-gray-50 transition-colors group">
                     <td className="py-3 px-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
                       <input 
                         type="checkbox" 
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" 
                         checked={selectedTickets.includes(ticket.id)}
                         onChange={() => toggleTicket(ticket.id)}
                       />
@@ -193,9 +256,13 @@ export default function TicketsPage() {
                   <td className="py-3 px-4">
                     <Link href={`/tickets/${ticket.id}`} className="flex items-center gap-2 group/title">
                       {ticket.type === 'incident' ? (
-                        <Zap size={14} className="text-orange-500 shrink-0" />
+                        <div className="w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center shrink-0 shadow-sm">
+                          <Zap size={12} className="text-white fill-white" />
+                        </div>
                       ) : (
-                        <FileText size={14} className="text-teal-500 shrink-0" />
+                        <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shrink-0 shadow-sm">
+                          <FileText size={12} className="text-white fill-white" />
+                        </div>
                       )}
                       <span className="text-[13px] font-medium text-gray-800 group-hover/title:text-blue-600 transition-colors">
                         {ticket.title}
@@ -257,5 +324,13 @@ export default function TicketsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function TicketsPage() {
+  return (
+    <Suspense fallback={<div className="p-10">Cargando solicitudes...</div>}>
+      <TicketsContent />
+    </Suspense>
   );
 }

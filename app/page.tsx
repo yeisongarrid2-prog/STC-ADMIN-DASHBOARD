@@ -150,7 +150,7 @@ export default function AnalyticsDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           
           {/* Tickets Vencidos - Rojo (Emergencia) */}
-          <Link href="/tickets?status=vencidos" className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
+          <Link href="/tickets?view=vencidos" className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#881337]">Tickets Vencidos</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
@@ -163,7 +163,7 @@ export default function AnalyticsDashboard() {
           </Link>
 
           {/* Vencen Hoy - Naranja/Amarillo (Advertencia) */}
-          <Link href="/tickets?filter=hoy" className="bg-[#FFFBEB] rounded-lg shadow-sm border border-[#FEF3C7] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
+          <Link href="/tickets?view=hoy" className="bg-[#FFFBEB] rounded-lg shadow-sm border border-[#FEF3C7] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#92400E]">Vencen Hoy</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
@@ -176,7 +176,7 @@ export default function AnalyticsDashboard() {
           </Link>
 
           {/* Sin Asignar - Naranja (Acción requerida) */}
-          <Link href="/tickets?filter=sin-asignar" className="bg-[#FFF7ED] rounded-lg shadow-sm border border-[#FFEDD5] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
+          <Link href="/tickets?view=sin-asignar" className="bg-[#FFF7ED] rounded-lg shadow-sm border border-[#FFEDD5] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#9A3412]">Sin Asignar</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
@@ -189,7 +189,7 @@ export default function AnalyticsDashboard() {
           </Link>
 
           {/* Tickets Abiertos - Azul (Volumen normal) */}
-          <Link href="/tickets?status=abierto" className="bg-[#EFF6FF] rounded-lg shadow-sm border border-[#DBEAFE] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
+          <Link href="/tickets?view=abiertos" className="bg-[#EFF6FF] rounded-lg shadow-sm border border-[#DBEAFE] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#1E40AF]">Tickets Abiertos</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
@@ -201,8 +201,8 @@ export default function AnalyticsDashboard() {
             </h3>
           </Link>
 
-          {/* En Espera - Gris/Morado (Pausado) */}
-          <Link href="/tickets?status=espera" className="bg-[#F8FAFC] rounded-lg shadow-sm border border-[#E2E8F0] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
+          {/* En Curso - Ámbar (Trabajo activo) */}
+          <Link href="/tickets?view=en-curso" className="bg-[#FFFBEB] rounded-lg shadow-sm border border-[#FEF3C7] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#475569]">En Espera</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
@@ -214,8 +214,8 @@ export default function AnalyticsDashboard() {
             </h3>
           </Link>
 
-          {/* Tickets en Seguimiento - Verde (Fluyendo) */}
-          <Link href="/tickets?filter=seguimiento" className="bg-[#F0FDF4] rounded-lg shadow-sm border border-[#DCFCE7] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
+          {/* Resueltos - Verde (Éxito) */}
+          <Link href="/tickets?view=resueltos" className="bg-[#F0FDF4] rounded-lg shadow-sm border border-[#DCFCE7] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#166534]">Tickets en Seguimiento</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
