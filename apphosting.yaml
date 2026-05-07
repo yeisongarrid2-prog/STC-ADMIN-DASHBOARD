@@ -1,0 +1,21 @@
+# Settings to manage and configure a Firebase App Hosting backend.
+# https://firebase.google.com/docs/app-hosting/configure
+
+runConfig:
+  maxInstances: 2
+  memory: 512Mi
+
+# Environment variables for the backend
+env:
+  - variable: NEXT_PUBLIC_GLPI_URL
+    value: "https://glpi.stcommunication.net/apirest.php"
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: "studio-1399704448-1e4bb"
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: "studio-1399704448-1e4bb.firebaseapp.com"
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: "studio-1399704448-1e4bb.firebasestorage.app"
+
+# Secrets should be managed via Firebase Console / Cloud Secret Manager
+# and then referenced here if needed.
+# For now, these should be configured in the App Hosting dashboard.
