@@ -3,26 +3,40 @@ import { Ticket } from '@/app/store/ticketStore';
 
 export async function fetchGlpiTickets(): Promise<Ticket[]> {
   try {
-    // Obtenemos los tickets de GLPI. 
-    // Por defecto traemos los últimos 50 para el dashboard.
-    const rawTickets = await glpiFetch('Ticket?expand_dropdowns=true&range=0-50&sort=date_mod&order=DESC');
+    // Filtramos tickets desde el 1 de Enero de 2026 y ordenamos por fecha de creación descendente.
+    // Usamos el endpoint de búsqueda para filtros más avanzados.
+    // Campo 15 es date_creation en GLPI.
+    const query = [
+      'expand_dropdowns=true',
+      'range=0-100', // Traemos hasta 100 tickets
+      'sort=15',     // Ordenar por fecha de creación
+      'order=DESC',
+      'criteria[0][field]=15',
+      'criteria[0][condition]=greater',
+      'criteria[0][value]=2026-01-01 00:00:00'
+    ].join('&');
+
+    const rawTickets = await glpiFetch(`search/Ticket?${query}`);
     
-    if (!Array.isArray(rawTickets)) {
+    // El endpoint /search devuelve un objeto con 'data' y 'totalcount'
+    const ticketsData = rawTickets.data || [];
+
+    if (!Array.isArray(ticketsData)) {
       console.error('Respuesta inesperada de GLPI:', rawTickets);
       return [];
     }
 
-    return rawTickets.map((t: any) => ({
-      id: t.id.toString(),
-      type: t.type === 1 ? 'incident' : 'request',
-      title: t.name || 'Sin asunto',
-      requester: t.users_id_recipient_format || 'Desconocido',
-      assignee: t.users_id_lastupdater_format || 'Sin asignar',
-      group: t.groups_id_format || 'General',
-      status: mapGlpiStatus(t.status),
-      priority: mapGlpiPriority(t.priority),
-      dueDate: t.time_to_resolve ? new Date(t.time_to_resolve).toLocaleDateString() : 'Sin fecha',
-      created: new Date(t.date_creation).toLocaleDateString(),
+    return ticketsData.map((t: any) => ({
+      id: t[1].toString(), // En /search, los campos vienen indexados o por nombre dependiendo de la versión
+      type: t[14] === 1 ? 'incident' : 'request', // Campo 14 suele ser type
+      title: t[1] || 'Sin asunto',
+      requester: t[4] || 'Desconocido', // Campo 4 suele ser requester
+      assignee: t[5] || 'Sin asignar',  // Campo 5 suele ser assignee
+      group: t[7] || 'General',         // Campo 7 suele ser group
+      status: mapGlpiStatus(parseInt(t[12])), // Campo 12 suele ser status
+      priority: mapGlpiPriority(parseInt(t[3])), // Campo 3 suele ser priority
+      dueDate: t[18] ? new Date(t[18]).toLocaleDateString() : 'Sin fecha', // Campo 18 suelen ser vencimiento
+      created: new Date(t[15]).toLocaleDateString(), // Campo 15 es date_creation
       source: 'GLPI'
     }));
   } catch (error) {
