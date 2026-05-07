@@ -32,7 +32,7 @@ export async function fetchGlpiTickets(): Promise<Ticket[]> {
       dueDate: t[18] ? new Date(t[18]).toLocaleDateString() : 'Sin fecha',
       created: t[15] ? new Date(t[15]).toLocaleDateString() : '?',
       source: 'GLPI',
-      content: t[21] || ''
+      content: t[21] ? decodeGlpiHtml(t[21]) : ''
     }));
 
     // Obtener nombres reales de los usuarios
@@ -130,4 +130,18 @@ function mapGlpiPriority(priority: number): string {
     6: 'Urgente'
   };
   return priorities[priority] || 'Media';
+}
+
+function decodeGlpiHtml(html: string): string {
+  if (!html) return '';
+  return html
+    .replace(/&#60;/g, '<')
+    .replace(/&#62;/g, '>')
+    .replace(/&#38;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#34;/g, '"')
+    .replace(/&#39;/g, "'");
 }
