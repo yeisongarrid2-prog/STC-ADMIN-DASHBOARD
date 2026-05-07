@@ -12,32 +12,6 @@ import {
 } from 'lucide-react';
 import { fetchDashboardStats } from '@/lib/glpi/service';
 
-// Mock Data
-const volumeData = [
-  { date: '1 Abr', creados: 45, resueltos: 38 },
-  { date: '5 Abr', creados: 52, resueltos: 49 },
-  { date: '10 Abr', creados: 38, resueltos: 42 },
-  { date: '15 Abr', creados: 65, resueltos: 55 },
-  { date: '20 Abr', creados: 48, resueltos: 60 },
-  { date: '25 Abr', creados: 58, resueltos: 54 },
-  { date: '28 Abr', creados: 42, resueltos: 45 },
-];
-
-const priorityData = [
-  { name: 'Urgente', value: 15, color: '#ef4444' }, // red-500
-  { name: 'Alta', value: 30, color: '#f97316' },    // orange-500
-  { name: 'Media', value: 45, color: '#eab308' },   // yellow-500
-  { name: 'Baja', value: 10, color: '#3b82f6' },    // blue-500
-];
-
-const techData = [
-  { name: 'Ana S.', tickets: 145 },
-  { name: 'Carlos R.', tickets: 132 },
-  { name: 'Miguel T.', tickets: 98 },
-  { name: 'Laura M.', tickets: 87 },
-  { name: 'David P.', tickets: 76 },
-];
-
 export default function AnalyticsDashboard() {
   const [dateRange, setDateRange] = useState("Este Mes");
   const [stats, setStats] = useState({
@@ -47,16 +21,79 @@ export default function AnalyticsDashboard() {
     closed: 0,
     unassigned: 0,
   });
+  const [chartsData, setChartsData] = useState<{
+    volume: any[],
+    priority: any[],
+    techs: any[]
+  }>({
+    volume: [],
+    priority: [],
+    techs: []
+  });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function loadStats() {
+    async function loadAllData() {
       setIsLoading(true);
-      const data = await fetchDashboardStats();
-      setStats(data);
-      setIsLoading(false);
+      try {
+        const [counts, tickets] = await Promise.all([
+          fetchDashboardStats(),
+          fetchGlpiTickets()
+        ]);
+        
+        setStats(counts);
+
+        // Procesar datos para gráficos
+        // 1. Prioridad
+        const priorityCounts: Record<string, number> = {};
+        tickets.forEach(t => {
+          priorityCounts[t.priority] = (priorityCounts[t.priority] || 0) + 1;
+        });
+        const priorityFormatted = Object.entries(priorityCounts).map(([name, value]) => ({
+          name,
+          value,
+          color: name === 'Urgente' ? '#ef4444' : name === 'Alta' ? '#f97316' : name === 'Media' ? '#eab308' : '#3b82f6'
+        }));
+
+        // 2. Técnicos
+        const techCounts: Record<string, number> = {};
+        tickets.forEach(t => {
+          if (t.assignee && t.assignee !== 'Sin asignar') {
+            techCounts[t.assignee] = (techCounts[t.assignee] || 0) + 1;
+          }
+        });
+        const techFormatted = Object.entries(techCounts)
+          .map(([name, tickets]) => ({ name, tickets }))
+          .sort((a, b) => b.tickets - a.tickets)
+          .slice(0, 5);
+
+        // 3. Volumen (simplificado por ahora usando fechas de creación)
+        const volumeMap: Record<string, { date: string, creados: number, resueltos: number }> = {};
+        tickets.forEach(t => {
+          const dateStr = t.created.split('/')[0] + ' ' + (['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'][parseInt(t.created.split('/')[1]) - 1] || 'Mes');
+          if (!volumeMap[dateStr]) {
+            volumeMap[dateStr] = { date: dateStr, creados: 0, resueltos: 0 };
+          }
+          volumeMap[dateStr].creados++;
+          if (t.status === 'Resuelto' || t.status === 'Cerrado') {
+            volumeMap[dateStr].resueltos++;
+          }
+        });
+        const volumeFormatted = Object.values(volumeMap).reverse();
+
+        setChartsData({
+          priority: priorityFormatted,
+          techs: techFormatted,
+          volume: volumeFormatted
+        });
+
+      } catch (error) {
+        console.error("Error al cargar datos del dashboard:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
-    loadStats();
+    loadAllData();
   }, []);
 
   return (
@@ -212,7 +249,7 @@ export default function AnalyticsDashboard() {
           
           <div className="p-6 h-[320px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={volumeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={chartsData.volume} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorCreados" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
@@ -250,7 +287,7 @@ export default function AnalyticsDashboard() {
             </div>
             <div className="p-6 flex-1 min-h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={techData} layout="vertical" margin={{ top: 0, right: 20, left: 20, bottom: 0 }}>
+                <BarChart data={chartsData.techs} layout="vertical" margin={{ top: 0, right: 20, left: 20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
                   <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
                   <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: '#475569', fontSize: 13, fontWeight: 500 }} dx={-10} />
@@ -259,7 +296,7 @@ export default function AnalyticsDashboard() {
                     contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
                   />
                   <Bar dataKey="tickets" fill="#12263F" radius={[0, 4, 4, 0]} barSize={24}>
-                    {techData.map((entry, index) => (
+                    {chartsData.techs.map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={index === 0 ? '#3b82f6' : '#12263F'} />
                     ))}
                   </Bar>
@@ -280,14 +317,16 @@ export default function AnalyticsDashboard() {
             <div className="p-6 flex-1 min-h-[300px] flex items-center justify-center relative">
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="text-center">
-                  <p className="text-3xl font-bold text-gray-900">100</p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {chartsData.priority.reduce((acc, curr) => acc + curr.value, 0)}
+                  </p>
                   <p className="text-xs text-gray-500 font-medium">Totales</p>
                 </div>
               </div>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={priorityData}
+                    data={chartsData.priority}
                     cx="50%"
                     cy="50%"
                     innerRadius={70}
@@ -296,7 +335,7 @@ export default function AnalyticsDashboard() {
                     dataKey="value"
                     stroke="none"
                   >
-                    {priorityData.map((entry, index) => (
+                    {chartsData.priority.map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
@@ -308,12 +347,14 @@ export default function AnalyticsDashboard() {
               
               {/* Vertical Legend */}
               <div className="absolute right-8 top-1/2 -translate-y-1/2 space-y-3">
-                {priorityData.map((item, index) => (
+                {chartsData.priority.map((item: any, index: number) => (
                   <div key={index} className="flex items-center gap-3">
                     <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: item.color }}></div>
                     <div>
                       <p className="text-sm font-medium text-gray-700 leading-tight">{item.name}</p>
-                      <p className="text-xs text-gray-500">{item.value}%</p>
+                      <p className="text-xs text-gray-500">
+                        {Math.round((item.value / (chartsData.priority.reduce((acc, curr) => acc + curr.value, 0) || 1)) * 100)}%
+                      </p>
                     </div>
                   </div>
                 ))}
