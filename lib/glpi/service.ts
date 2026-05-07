@@ -45,6 +45,32 @@ export async function fetchGlpiTickets(): Promise<Ticket[]> {
   }
 }
 
+export async function fetchDashboardStats() {
+  try {
+    const baseQuery = 'criteria[0][field]=15&criteria[0][condition]=greater&criteria[0][value]=2026-01-01 00:00:00';
+    
+    // Hacemos varias peticiones en paralelo para obtener los conteos
+    const [open, assigned, resolved, closed, unassigned] = await Promise.all([
+      glpiFetch(`search/Ticket?range=0-0&${baseQuery}&criteria[1][link]=AND&criteria[1][field]=12&criteria[1][condition]=1&criteria[1][value]=1`), // Nuevo (1)
+      glpiFetch(`search/Ticket?range=0-0&${baseQuery}&criteria[1][link]=AND&criteria[1][field]=12&criteria[1][condition]=1&criteria[1][value]=2`), // Asignado (2)
+      glpiFetch(`search/Ticket?range=0-0&${baseQuery}&criteria[1][link]=AND&criteria[1][field]=12&criteria[1][condition]=1&criteria[1][value]=5`), // Resuelto (5)
+      glpiFetch(`search/Ticket?range=0-0&${baseQuery}&criteria[1][link]=AND&criteria[1][field]=12&criteria[1][condition]=1&criteria[1][value]=6`), // Cerrado (6)
+      glpiFetch(`search/Ticket?range=0-0&${baseQuery}&criteria[1][link]=AND&criteria[1][field]=5&criteria[1][condition]=1&criteria[1][value]=0`),  // Sin técnico
+    ]);
+
+    return {
+      open: open.totalcount || 0,
+      assigned: assigned.totalcount || 0,
+      resolved: resolved.totalcount || 0,
+      closed: closed.totalcount || 0,
+      unassigned: unassigned.totalcount || 0,
+    };
+  } catch (error) {
+    console.error('Error fetching dashboard stats:', error);
+    return { open: 0, assigned: 0, resolved: 0, closed: 0, unassigned: 0 };
+  }
+}
+
 function mapGlpiStatus(status: number): string {
   const statuses: Record<number, string> = {
     1: 'Nuevo',

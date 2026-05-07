@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, PieChart, Pie, Cell, Legend
@@ -8,8 +8,9 @@ import {
 import { 
   Calendar, ChevronDown, Filter, Download, Plus, 
   GripHorizontal, MoreVertical, TrendingUp, TrendingDown,
-  LayoutDashboard, Settings2, Clock
+  LayoutDashboard, Settings2, Clock, AlertCircle, Eye
 } from 'lucide-react';
+import { fetchDashboardStats } from '@/lib/glpi/service';
 
 // Mock Data
 const volumeData = [
@@ -39,6 +40,24 @@ const techData = [
 
 export default function AnalyticsDashboard() {
   const [dateRange, setDateRange] = useState("Este Mes");
+  const [stats, setStats] = useState({
+    open: 0,
+    assigned: 0,
+    resolved: 0,
+    closed: 0,
+    unassigned: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadStats() {
+      setIsLoading(true);
+      const data = await fetchDashboardStats();
+      setStats(data);
+      setIsLoading(false);
+    }
+    loadStats();
+  }, []);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto min-h-full">
@@ -90,62 +109,80 @@ export default function AnalyticsDashboard() {
       <div className="space-y-6">
         
         {/* Scorecards Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Card 1 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 group relative hover:shadow-md transition-shadow">
-            <div className="absolute top-3 right-3 text-gray-300 opacity-0 group-hover:opacity-100 cursor-move transition-opacity">
-              <GripHorizontal size={18} />
-            </div>
-            <p className="text-sm font-medium text-gray-500 mb-2">Tickets Creados</p>
-            <div className="flex items-end justify-between">
-              <h3 className="text-3xl font-bold text-gray-900">1,248</h3>
-              <div className="flex items-center gap-1 text-sm font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded text-right">
-                <TrendingUp size={14} /> +12%
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+          
+          {/* Overdue Tickets - Red Style */}
+          <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[13px] font-semibold text-[#881337]">Overdue Tickets</p>
+              <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
+                <AlertCircle size={14} className="text-[#BE123C]" />
               </div>
             </div>
+            <h3 className="text-4xl font-bold text-[#881337] mt-2">
+              {isLoading ? "..." : (stats.open + stats.unassigned)}
+            </h3>
           </div>
 
-          {/* Card 2 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 group relative hover:shadow-md transition-shadow">
-            <div className="absolute top-3 right-3 text-gray-300 opacity-0 group-hover:opacity-100 cursor-move transition-opacity">
-              <GripHorizontal size={18} />
+          {/* Tickets Due Today - White Style */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col justify-between relative min-h-[120px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[13px] font-semibold text-gray-500">Tickets Due Today</p>
             </div>
-            <p className="text-sm font-medium text-gray-500 mb-2">Tickets Resueltos</p>
-            <div className="flex items-end justify-between">
-              <h3 className="text-3xl font-bold text-gray-900">1,102</h3>
-              <div className="flex items-center gap-1 text-sm font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded text-right">
-                <TrendingUp size={14} /> +8%
-              </div>
-            </div>
+            <h3 className="text-4xl font-bold text-blue-600 mt-2">
+              {isLoading ? "..." : "0"}
+            </h3>
           </div>
 
-          {/* Card 3 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 group relative hover:shadow-md transition-shadow">
-            <div className="absolute top-3 right-3 text-gray-300 opacity-0 group-hover:opacity-100 cursor-move transition-opacity">
-              <GripHorizontal size={18} />
-            </div>
-            <p className="text-sm font-medium text-gray-500 mb-2">Sin Resolver (Backlog)</p>
-            <div className="flex items-end justify-between">
-              <h3 className="text-3xl font-bold text-gray-900">146</h3>
-              <div className="flex items-center gap-1 text-sm font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded text-right">
-                <TrendingDown size={14} /> -5%
+          {/* Open Tickets - Red Style */}
+          <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[13px] font-semibold text-[#881337]">Open tickets</p>
+              <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
+                <AlertCircle size={14} className="text-[#BE123C]" />
               </div>
             </div>
+            <h3 className="text-4xl font-bold text-[#881337] mt-2">
+              {isLoading ? "..." : stats.open}
+            </h3>
           </div>
 
-          {/* Card 4 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 group relative hover:shadow-md transition-shadow">
-            <div className="absolute top-3 right-3 text-gray-300 opacity-0 group-hover:opacity-100 cursor-move transition-opacity">
-              <GripHorizontal size={18} />
-            </div>
-            <p className="text-sm font-medium text-gray-500 mb-2">Cumplimiento SLA</p>
-            <div className="flex items-end justify-between">
-              <h3 className="text-3xl font-bold text-gray-900">94.2%</h3>
-              <div className="flex items-center gap-1 text-sm font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded text-right">
-                <TrendingUp size={14} /> +1.1%
+          {/* Tickets On Hold - Red Style */}
+          <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[13px] font-semibold text-[#881337]">Tickets On Hold</p>
+              <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
+                <AlertCircle size={14} className="text-[#BE123C]" />
               </div>
             </div>
+            <h3 className="text-4xl font-bold text-[#881337] mt-2">
+              {isLoading ? "..." : stats.assigned}
+            </h3>
           </div>
+
+          {/* Unassigned Tickets - Red Style */}
+          <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[13px] font-semibold text-[#881337]">Unassigned Tickets</p>
+              <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
+                <AlertCircle size={14} className="text-[#BE123C]" />
+              </div>
+            </div>
+            <h3 className="text-4xl font-bold text-[#881337] mt-2">
+              {isLoading ? "..." : stats.unassigned}
+            </h3>
+          </div>
+
+          {/* Tickets I'm Watching - White Style */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col justify-between relative min-h-[120px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[13px] font-semibold text-gray-500">Tickets I'm Watching</p>
+            </div>
+            <h3 className="text-4xl font-bold text-blue-600 mt-2">
+              {isLoading ? "..." : "0"}
+            </h3>
+          </div>
+
         </div>
 
         {/* Main Chart Row */}
