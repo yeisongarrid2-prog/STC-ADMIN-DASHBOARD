@@ -254,17 +254,13 @@ function TicketsContent() {
                     </Link>
                   </td>
                   <td className="py-3 px-4">
-                    <Link href={`/tickets/${ticket.id}`} className="flex items-center gap-2 group/title">
+                    <Link href={`/tickets/${ticket.id}`} className="flex items-center gap-2.5 group/title">
                       {ticket.type === 'incident' ? (
-                        <div className="w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center shrink-0 shadow-sm">
-                          <Zap size={12} className="text-white fill-white" />
-                        </div>
+                        <Zap size={14} className="text-orange-500 shrink-0" strokeWidth={2.5} />
                       ) : (
-                        <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shrink-0 shadow-sm">
-                          <FileText size={12} className="text-white fill-white" />
-                        </div>
+                        <FileText size={14} className="text-blue-500 shrink-0" strokeWidth={2.5} />
                       )}
-                      <span className="text-[13px] font-medium text-gray-800 group-hover/title:text-blue-600 transition-colors">
+                      <span className="text-[13px] font-medium text-gray-700 group-hover/title:text-blue-600 transition-colors truncate max-w-[400px]">
                         {ticket.title}
                       </span>
                     </Link>
