@@ -16,7 +16,8 @@ import { useRouter } from "next/navigation";
 export default function TicketDetail({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id: ticketId } = use(params);
-  const { tickets, updateTicket, addReply } = useTicketStore();
+  const { tickets, updateTicket, addReply, setTickets } = useTicketStore();
+  const [isLoading, setIsLoading] = useState(tickets.length === 0);
 
   const ticket = tickets.find(t => t.id === ticketId);
 
@@ -174,6 +175,27 @@ export default function TicketDetail({ params }: { params: Promise<{ id: string 
 
   // Al cargar, inicializar con los datos del store
   useEffect(() => {
+    const loadData = async () => {
+      if (tickets.length === 0) {
+        setIsLoading(true);
+        try {
+          const { fetchGlpiTickets } = await import("@/lib/glpi/service");
+          const glpiTickets = await fetchGlpiTickets();
+          if (glpiTickets.length > 0) {
+            setTickets(glpiTickets);
+          }
+        } catch (error) {
+          console.error("Error loading tickets:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadData();
+  }, [tickets.length, setTickets]);
+
+  useEffect(() => {
     if (ticket) {
       setProperties({
         priority: ticket.priority,
@@ -184,8 +206,12 @@ export default function TicketDetail({ params }: { params: Promise<{ id: string 
     }
   }, [ticket]);
 
+  if (isLoading) {
+    return <div className="p-10 flex justify-center items-center h-64"><Loader2 className="animate-spin text-blue-500 w-8 h-8" /></div>;
+  }
+
   if (!ticket) {
-    return <div className="p-8 text-center text-gray-500">Ticket no encontrado</div>;
+    return <div className="p-8 text-center text-gray-500 font-medium">Ticket no encontrado o no disponible.</div>;
   }
 
   const handleUpdate = () => {
