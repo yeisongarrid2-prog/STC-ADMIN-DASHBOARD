@@ -143,10 +143,9 @@ export default function TicketsPage() {
                 </th>
                 <th className="py-3 px-2 w-16 text-center text-[11px] font-semibold text-gray-500 cursor-pointer hover:bg-gray-100 flex items-center justify-center gap-1">Id <ChevronDown size={12}/></th>
                 <th className="py-3 px-4 text-[11px] font-semibold text-gray-500">Asunto</th>
-                <th className="py-3 px-4 text-[11px] font-semibold text-gray-500">Solicitante</th>
-                <th className="py-3 px-4 text-[11px] font-semibold text-gray-500">Técnico</th>
-                <th className="py-3 px-4 text-[11px] font-semibold text-gray-500">Grupo</th>
-                <th className="py-3 px-4 text-[11px] font-semibold text-gray-500">Estado</th>
+                <th className="py-3 px-4 text-[11px] font-semibold text-gray-500 text-left">Solicitante</th>
+                <th className="py-3 px-4 text-[11px] font-semibold text-gray-500 text-left">Técnico</th>
+                <th className="py-3 px-4 text-[11px] font-semibold text-gray-500 text-left">Estado</th>
                 <th className="py-3 px-4 text-[11px] font-semibold text-gray-500">Vencimiento</th>
                 <th className="py-3 px-4 text-[11px] font-semibold text-gray-500 text-right">Creado</th>
               </tr>
@@ -155,7 +154,7 @@ export default function TicketsPage() {
               {isLoading && tickets.length === 0 ? (
                 Array.from({ length: 8 }).map((_, i) => (
                   <tr key={`skeleton-${i}`}>
-                    <td colSpan={9} className="py-4 px-4">
+                    <td colSpan={8} className="py-4 px-4">
                       <div className="flex items-center gap-4">
                         <Skeleton className="h-4 w-4" />
                         <Skeleton className="h-4 w-full" />
@@ -165,7 +164,7 @@ export default function TicketsPage() {
                 ))
               ) : tickets.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-10 text-center text-gray-500">
+                  <td colSpan={8} className="py-10 text-center text-gray-500">
                     No se encontraron solicitudes en GLPI.
                   </td>
                 </tr>
@@ -211,9 +210,6 @@ export default function TicketsPage() {
                       <div className={`w-1.5 h-1.5 rounded-full ${ticket.assignee !== 'Sin asignar' ? 'bg-gray-400' : 'bg-transparent'}`}></div>
                       <span className="text-[12px] text-gray-700">{ticket.assignee}</span>
                     </div>
-                  </td>
-                  <td className="py-3 px-4 whitespace-nowrap">
-                    <span className="text-[12px] text-gray-700">{ticket.group}</span>
                   </td>
                   <td className="py-3 px-4 whitespace-nowrap">
                     <span className="text-[12px] text-gray-700 flex items-center gap-1.5">

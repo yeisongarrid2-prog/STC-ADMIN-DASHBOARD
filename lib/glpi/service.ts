@@ -21,19 +21,44 @@ export async function fetchGlpiTickets(): Promise<Ticket[]> {
       return [];
     }
 
-    return ticketsData.map((t: any) => ({
-      id: t[2]?.toString() || t[1]?.toString() || '?', // Usar ID real (campo 2)
+    const tickets = ticketsData.map((t: any) => ({
+      id: t[2]?.toString() || t[1]?.toString() || '?', 
       type: t[14] === 1 ? 'incident' : 'request',
       title: t[1] || 'Sin asunto',
       requester: t[4] || 'Desconocido', 
       assignee: t[5] || 'Sin asignar',  
-      group: t[7] || t[8] || 'General', 
       status: mapGlpiStatus(parseInt(t[12])),
       priority: mapGlpiPriority(parseInt(t[3])),
       dueDate: t[18] ? new Date(t[18]).toLocaleDateString() : 'Sin fecha',
       created: t[15] ? new Date(t[15]).toLocaleDateString() : '?',
       source: 'GLPI'
     }));
+
+    // Obtener nombres reales de los usuarios
+    const userIds = new Set<string>();
+    tickets.forEach(t => {
+      if (t.requester && t.requester !== 'Desconocido') userIds.add(t.requester);
+      if (t.assignee && t.assignee !== 'Sin asignar') userIds.add(t.assignee);
+    });
+
+    if (userIds.size > 0) {
+      try {
+        const usersData = await glpiFetch(`User?range=0-100`);
+        const userMap: Record<string, string> = {};
+        usersData.forEach((u: any) => {
+          userMap[u.id.toString()] = u.firstname || u.realname ? `${u.firstname || ''} ${u.realname || ''}`.trim() : u.name;
+        });
+
+        tickets.forEach(t => {
+          if (userMap[t.requester]) t.requester = userMap[t.requester];
+          if (userMap[t.assignee]) t.assignee = userMap[t.assignee];
+        });
+      } catch (e) {
+        console.error('Error mapping users:', e);
+      }
+    }
+
+    return tickets;
   } catch (error) {
     console.error('Error fetching GLPI tickets:', error);
     return [];
