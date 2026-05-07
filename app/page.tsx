@@ -10,7 +10,7 @@ import {
   GripHorizontal, MoreVertical, TrendingUp, TrendingDown,
   LayoutDashboard, Settings2, Clock, AlertCircle, Eye, UserPlus, Ticket
 } from 'lucide-react';
-import { fetchDashboardStats } from '@/lib/glpi/service';
+import { fetchDashboardStats, fetchGlpiTickets } from '@/lib/glpi/service';
 
 export default function AnalyticsDashboard() {
   const [dateRange, setDateRange] = useState("Este Mes");
