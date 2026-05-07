@@ -651,6 +651,31 @@ export default function TicketDetail({ params }: { params: Promise<{ id: string 
               </div>
             </div>
 
+            {/* Assignee Info */}
+            <div className="bg-white border border-gray-100 rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+              <div className="px-4 py-3 border-b border-gray-50 flex items-center justify-between">
+                <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                  <ChevronDown size={14} /> AGENTES ASIGNADOS
+                </h3>
+              </div>
+              <div className="p-4">
+                <div className="flex flex-wrap gap-2">
+                  {ticket.assignee === 'Sin asignar' ? (
+                    <span className="text-xs text-gray-500 italic">Nadie asignado aún</span>
+                  ) : (
+                    ticket.assignee.split(', ').map((name, i) => (
+                      <div key={i} className="flex items-center gap-2 bg-blue-50 text-blue-700 px-2.5 py-1.5 rounded-lg border border-blue-100 w-full">
+                        <div className="w-5 h-5 rounded-full bg-blue-200 text-blue-700 flex items-center justify-center font-bold text-[10px] shrink-0">
+                          {name.trim().split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)}
+                        </div>
+                        <span className="text-xs font-medium truncate">{name.trim()}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+
             {/* Requester Info */}
             <div className="bg-white border border-gray-100 rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
               <div className="px-4 py-3 border-b border-gray-50 flex items-center justify-between">

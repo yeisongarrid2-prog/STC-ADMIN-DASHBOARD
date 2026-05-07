@@ -206,9 +206,16 @@ export default function TicketsPage() {
                     <span className="text-[12px] text-gray-700">{ticket.requester}</span>
                   </td>
                   <td className="py-3 px-4 whitespace-nowrap">
-                    <div className="flex items-center gap-1.5">
-                      <div className={`w-1.5 h-1.5 rounded-full ${ticket.assignee !== 'Sin asignar' ? 'bg-gray-400' : 'bg-transparent'}`}></div>
-                      <span className="text-[12px] text-gray-700">{ticket.assignee}</span>
+                    <div className="flex items-center gap-1.5 group/tech cursor-help" title={ticket.assignee}>
+                      <div className={`w-1.5 h-1.5 rounded-full ${ticket.assignee !== 'Sin asignar' ? 'bg-blue-500' : 'bg-transparent'}`}></div>
+                      <span className="text-[12px] text-gray-700 max-w-[150px] truncate">
+                        {ticket.assignee.split(',')[0]}
+                      </span>
+                      {ticket.assignee.includes(',') && (
+                        <span className="bg-blue-50 text-blue-600 text-[10px] px-1.5 py-0.5 rounded-full font-bold border border-blue-100">
+                          +{ticket.assignee.split(',').length - 1}
+                        </span>
+                      )}
                     </div>
                   </td>
                   <td className="py-3 px-4 whitespace-nowrap">

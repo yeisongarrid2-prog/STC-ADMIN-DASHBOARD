@@ -38,7 +38,14 @@ export async function fetchGlpiTickets(): Promise<Ticket[]> {
     const userIds = new Set<string>();
     tickets.forEach(t => {
       if (t.requester && t.requester !== 'Desconocido') userIds.add(t.requester);
-      if (t.assignee && t.assignee !== 'Sin asignar') userIds.add(t.assignee);
+      
+      if (t.assignee && t.assignee !== 'Sin asignar') {
+        if (Array.isArray(t.assignee)) {
+          t.assignee.forEach((id: string) => userIds.add(id));
+        } else {
+          userIds.add(t.assignee);
+        }
+      }
     });
 
     if (userIds.size > 0) {
@@ -51,7 +58,16 @@ export async function fetchGlpiTickets(): Promise<Ticket[]> {
 
         tickets.forEach(t => {
           if (userMap[t.requester]) t.requester = userMap[t.requester];
-          if (userMap[t.assignee]) t.assignee = userMap[t.assignee];
+          
+          if (t.assignee && t.assignee !== 'Sin asignar') {
+            if (Array.isArray(t.assignee)) {
+              t.assignee = t.assignee
+                .map((id: string) => userMap[id] || id)
+                .join(', ');
+            } else if (userMap[t.assignee]) {
+              t.assignee = userMap[t.assignee];
+            }
+          }
         });
       } catch (e) {
         console.error('Error mapping users:', e);
