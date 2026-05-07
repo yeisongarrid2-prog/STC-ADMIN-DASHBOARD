@@ -8,7 +8,7 @@ import {
 import { 
   Calendar, ChevronDown, Filter, Download, Plus, 
   GripHorizontal, MoreVertical, TrendingUp, TrendingDown,
-  LayoutDashboard, Settings2, Clock, AlertCircle, Eye
+  LayoutDashboard, Settings2, Clock, AlertCircle, Eye, UserPlus, Ticket
 } from 'lucide-react';
 import { fetchDashboardStats } from '@/lib/glpi/service';
 
@@ -188,8 +188,6 @@ export default function AnalyticsDashboard() {
               {isLoading ? "..." : "0"}
             </h3>
           </div>
-
-        </div>
 
         </div>
 
