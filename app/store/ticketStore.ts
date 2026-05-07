@@ -16,7 +16,7 @@ export interface Ticket {
   title: string;
   requester: string;
   assignee: string;
-  group: string;
+  group?: string;
   status: string;
   dueDate: string;
   created: string;

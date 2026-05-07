@@ -25,8 +25,7 @@ export default function TicketDetail({ params }: { params: Promise<{ id: string 
     priority: "Alta",
     status: "Abierto",
     source: "Portal",
-    type: "Incidente",
-    group: "Activos de Software"
+    type: "Incidente"
   });
 
   // Estado para el editor de respuestas
@@ -180,8 +179,7 @@ export default function TicketDetail({ params }: { params: Promise<{ id: string 
         priority: ticket.priority,
         status: ticket.status,
         source: ticket.source,
-        type: ticket.type === 'incident' ? 'Incidente' : 'Solicitud',
-        group: ticket.group
+        type: ticket.type === 'incident' ? 'Incidente' : 'Solicitud'
       });
     }
   }, [ticket]);
@@ -196,8 +194,7 @@ export default function TicketDetail({ params }: { params: Promise<{ id: string 
       priority: properties.priority,
       status: properties.status,
       source: properties.source,
-      type: properties.type === 'Incidente' ? 'incident' : 'request',
-      group: properties.group
+      type: properties.type === 'Incidente' ? 'incident' : 'request'
     });
 
     toast.success("Propiedades del ticket actualizadas correctamente");
@@ -744,21 +741,6 @@ export default function TicketDetail({ params }: { params: Promise<{ id: string 
                     >
                       <option>Incidente</option>
                       <option>Solicitud</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="col-span-2">
-                    <label className="text-[11px] text-gray-500 font-medium mb-1 block">Grupo Asignado</label>
-                    <select
-                      value={properties.group}
-                      onChange={(e) => setProperties({ ...properties, group: e.target.value })}
-                      className="w-full text-xs border border-gray-200 rounded px-2 py-1.5 bg-white outline-none focus:border-blue-400 transition-colors"
-                    >
-                      <option>Activos de Software</option>
-                      <option>Redes</option>
-                      <option>Cuentas de Usuario</option>
                     </select>
                   </div>
                 </div>
