@@ -188,10 +188,10 @@ export default function AnalyticsDashboard() {
             </h3>
           </Link>
 
-          {/* Tickets Abiertos - Azul (Volumen normal) */}
+          {/* Tickets Nuevos - Azul */}
           <Link href="/tickets?view=abiertos" className="bg-[#EFF6FF] rounded-lg shadow-sm border border-[#DBEAFE] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-[#1E40AF]">Tickets Abiertos</p>
+              <p className="text-[13px] font-semibold text-[#1E40AF]">Tickets Nuevos</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
                 <Ticket size={14} className="text-[#2563EB]" />
               </div>
@@ -201,12 +201,12 @@ export default function AnalyticsDashboard() {
             </h3>
           </Link>
 
-          {/* En Curso - Ámbar (Trabajo activo) */}
+          {/* En Curso - Ámbar */}
           <Link href="/tickets?view=en-curso" className="bg-[#FFFBEB] rounded-lg shadow-sm border border-[#FEF3C7] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-[#475569]">En Espera</p>
+              <p className="text-[13px] font-semibold text-[#92400E]">En Curso</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
-                <Clock size={14} className="text-[#64748B]" />
+                <PlayCircle size={14} className="text-[#D97706]" />
               </div>
             </div>
             <h3 className="text-4xl font-bold text-[#475569] mt-2">
@@ -214,10 +214,10 @@ export default function AnalyticsDashboard() {
             </h3>
           </Link>
 
-          {/* Resueltos - Verde (Éxito) */}
+          {/* Resueltos - Verde */}
           <Link href="/tickets?view=resueltos" className="bg-[#F0FDF4] rounded-lg shadow-sm border border-[#DCFCE7] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-[#166534]">Tickets en Seguimiento</p>
+              <p className="text-[13px] font-semibold text-[#166534]">Resueltos</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
                 <Eye size={14} className="text-[#16A34A]" />
               </div>

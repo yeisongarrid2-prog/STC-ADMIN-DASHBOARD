@@ -110,8 +110,8 @@ export async function fetchDashboardStats() {
 function mapGlpiStatus(status: number): string {
   const statuses: Record<number, string> = {
     1: 'Nuevo',
-    2: 'En curso (asignado)',
-    3: 'En curso (planificado)',
+    2: 'En curso',
+    3: 'En curso',
     4: 'En espera',
     5: 'Resuelto',
     6: 'Cerrado'

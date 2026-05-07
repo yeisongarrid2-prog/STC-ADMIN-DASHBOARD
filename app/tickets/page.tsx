@@ -29,7 +29,7 @@ const priorityStyles: Record<string, string> = {
 
 const views = [
   { id: 'all', label: 'Todas las Solicitudes', icon: <Filter size={16} /> },
-  { id: 'abiertos', label: 'Tickets Abiertos', icon: <div className="w-2 h-2 rounded-full bg-blue-500" /> },
+  { id: 'abiertos', label: 'Tickets Nuevos', icon: <div className="w-2 h-2 rounded-full bg-blue-500" /> },
   { id: 'en-curso', label: 'En Curso', icon: <div className="w-2 h-2 rounded-full bg-amber-500" /> },
   { id: 'resueltos', label: 'Resueltos', icon: <div className="w-2 h-2 rounded-full bg-green-500" /> },
   { id: 'vencidos', label: 'Tickets Vencidos', icon: <div className="w-2 h-2 rounded-full bg-red-500" /> },
@@ -68,7 +68,7 @@ function TicketsContent() {
 
   const filteredTickets = tickets.filter(t => {
     if (currentViewId === 'all') return true;
-    if (currentViewId === 'abiertos') return t.status === 'Abierto';
+    if (currentViewId === 'abiertos') return t.status === 'Nuevo';
     if (currentViewId === 'en-curso') return t.status === 'En curso';
     if (currentViewId === 'resueltos') return t.status === 'Resuelto';
     if (currentViewId === 'sin-asignar') return t.assignee === 'Sin asignar';
@@ -282,10 +282,15 @@ function TicketsContent() {
                     </div>
                   </td>
                   <td className="py-3 px-4 whitespace-nowrap">
-                    <span className="text-[12px] text-gray-700 flex items-center gap-1.5">
-                      {ticket.status}
-                      {ticket.status === 'Abierto' && <div className="w-3 h-3 rounded-sm bg-orange-400"></div>}
-                      {ticket.status === 'Cerrado' && <CheckCircle2 size={12} className="text-green-600"/>}
+                    <span className="text-[12px] text-gray-700 flex items-center gap-2">
+                      {ticket.status === 'Nuevo' && <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_6px_rgba(59,130,246,0.4)]"></div>}
+                      {ticket.status === 'En curso' && <div className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.4)]"></div>}
+                      {ticket.status === 'En espera' && <div className="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_6px_rgba(168,85,247,0.4)]"></div>}
+                      {ticket.status === 'Resuelto' && <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.4)]"></div>}
+                      {ticket.status === 'Cerrado' && <CheckCircle2 size={14} className="text-gray-400"/>}
+                      <span className={ticket.status === 'Cerrado' ? 'text-gray-400 font-medium' : 'font-medium'}>
+                        {ticket.status}
+                      </span>
                     </span>
                   </td>
                   <td className="py-3 px-4 whitespace-nowrap">
