@@ -111,7 +111,7 @@ export default function AnalyticsDashboard() {
         {/* Scorecards Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           
-          {/* Overdue Tickets - Red Style */}
+          {/* Tickets Vencidos - Rojo (Emergencia) */}
           <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#881337]">Tickets Vencidos</p>
@@ -124,64 +124,72 @@ export default function AnalyticsDashboard() {
             </h3>
           </div>
 
-          {/* Tickets Due Today - White Style */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col justify-between relative min-h-[120px]">
+          {/* Vencen Hoy - Naranja/Amarillo (Advertencia) */}
+          <div className="bg-[#FFFBEB] rounded-lg shadow-sm border border-[#FEF3C7] p-4 flex flex-col justify-between relative min-h-[120px]">
             <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-gray-500">Vencen Hoy</p>
+              <p className="text-[13px] font-semibold text-[#92400E]">Vencen Hoy</p>
+              <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
+                <Clock size={14} className="text-[#D97706]" />
+              </div>
             </div>
-            <h3 className="text-4xl font-bold text-blue-600 mt-2">
+            <h3 className="text-4xl font-bold text-[#92400E] mt-2">
               {isLoading ? "..." : "0"}
             </h3>
           </div>
 
-          {/* Open Tickets - Red Style */}
-          <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
+          {/* Sin Asignar - Naranja (Acción requerida) */}
+          <div className="bg-[#FFF7ED] rounded-lg shadow-sm border border-[#FFEDD5] p-4 flex flex-col justify-between relative min-h-[120px]">
             <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-[#881337]">Tickets Abiertos</p>
+              <p className="text-[13px] font-semibold text-[#9A3412]">Sin Asignar</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
-                <AlertCircle size={14} className="text-[#BE123C]" />
+                <UserPlus size={14} className="text-[#EA580C]" />
               </div>
             </div>
-            <h3 className="text-4xl font-bold text-[#881337] mt-2">
-              {isLoading ? "..." : stats.open}
-            </h3>
-          </div>
-
-          {/* Tickets On Hold - Red Style */}
-          <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
-            <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-[#881337]">En Espera</p>
-              <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
-                <AlertCircle size={14} className="text-[#BE123C]" />
-              </div>
-            </div>
-            <h3 className="text-4xl font-bold text-[#881337] mt-2">
-              {isLoading ? "..." : stats.assigned}
-            </h3>
-          </div>
-
-          {/* Unassigned Tickets - Red Style */}
-          <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
-            <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-[#881337]">Sin Asignar</p>
-              <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
-                <AlertCircle size={14} className="text-[#BE123C]" />
-              </div>
-            </div>
-            <h3 className="text-4xl font-bold text-[#881337] mt-2">
+            <h3 className="text-4xl font-bold text-[#9A3412] mt-2">
               {isLoading ? "..." : stats.unassigned}
             </h3>
           </div>
 
-          {/* Tickets I'm Watching - White Style */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col justify-between relative min-h-[120px]">
+          {/* Tickets Abiertos - Azul (Volumen normal) */}
+          <div className="bg-[#EFF6FF] rounded-lg shadow-sm border border-[#DBEAFE] p-4 flex flex-col justify-between relative min-h-[120px]">
             <div className="flex justify-between items-start">
-              <p className="text-[13px] font-semibold text-gray-500">Tickets en Seguimiento</p>
+              <p className="text-[13px] font-semibold text-[#1E40AF]">Tickets Abiertos</p>
+              <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
+                <Ticket size={14} className="text-[#2563EB]" />
+              </div>
             </div>
-            <h3 className="text-4xl font-bold text-blue-600 mt-2">
+            <h3 className="text-4xl font-bold text-[#1E40AF] mt-2">
+              {isLoading ? "..." : stats.open}
+            </h3>
+          </div>
+
+          {/* En Espera - Gris/Morado (Pausado) */}
+          <div className="bg-[#F8FAFC] rounded-lg shadow-sm border border-[#E2E8F0] p-4 flex flex-col justify-between relative min-h-[120px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[13px] font-semibold text-[#475569]">En Espera</p>
+              <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
+                <Clock size={14} className="text-[#64748B]" />
+              </div>
+            </div>
+            <h3 className="text-4xl font-bold text-[#475569] mt-2">
+              {isLoading ? "..." : stats.assigned}
+            </h3>
+          </div>
+
+          {/* Tickets en Seguimiento - Verde (Fluyendo) */}
+          <div className="bg-[#F0FDF4] rounded-lg shadow-sm border border-[#DCFCE7] p-4 flex flex-col justify-between relative min-h-[120px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[13px] font-semibold text-[#166534]">Tickets en Seguimiento</p>
+              <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
+                <Eye size={14} className="text-[#16A34A]" />
+              </div>
+            </div>
+            <h3 className="text-4xl font-bold text-[#166534] mt-2">
               {isLoading ? "..." : "0"}
             </h3>
           </div>
+
+        </div>
 
         </div>
 
