@@ -31,7 +31,8 @@ export async function fetchGlpiTickets(): Promise<Ticket[]> {
       priority: mapGlpiPriority(parseInt(t[3])),
       dueDate: t[18] ? new Date(t[18]).toLocaleDateString() : 'Sin fecha',
       created: t[15] ? new Date(t[15]).toLocaleDateString() : '?',
-      source: 'GLPI'
+      source: 'GLPI',
+      content: t[21] || ''
     }));
 
     // Obtener nombres reales de los usuarios

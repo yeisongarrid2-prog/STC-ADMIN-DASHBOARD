@@ -315,12 +315,16 @@ export default function TicketDetail({ params }: { params: Promise<{ id: string 
                   </div>
                 </div>
 
-                <div className="text-[14px] text-gray-700 leading-relaxed mb-8 ml-14">
-                  Hola equipo,<br /><br />
-                  Estoy intentando exportar un proyecto grande en Adobe Illustrator pero sigo recibiendo el "Error 42 P42" justo antes de que termine el renderizado. Ya he intentado reiniciar el equipo y vaciar la caché pero el problema persiste. ¿Podrían ayudarme con esto? Tengo una entrega importante mañana.<br /><br />
-                  Gracias.
-                </div>
-
+                {ticket.content ? (
+                  <div 
+                    className="text-[14px] text-gray-700 leading-relaxed mb-8 ml-14 glpi-content"
+                    dangerouslySetInnerHTML={{ __html: ticket.content }}
+                  />
+                ) : (
+                  <div className="text-[14px] text-gray-700 leading-relaxed mb-8 ml-14 italic text-gray-400">
+                    Sin descripción provista por el solicitante.
+                  </div>
+                )}
                 {/* Tabs */}
                 <div className="flex flex-wrap gap-2 ml-14">
                   <button className="px-4 py-1.5 rounded-full border border-gray-100 bg-gray-50 text-[11px] font-semibold text-gray-600 hover:border-blue-300 hover:text-blue-600 transition-colors uppercase tracking-wider">Tickets Hijo</button>

@@ -46,3 +46,30 @@ body {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
+
+/* Renderizado de contenido HTML de GLPI */
+.glpi-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.glpi-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.glpi-content a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.glpi-content img {
+  max-width: 100%;
+  height: auto !important; /* Previene imágenes estiradas de firmas */
+  border-radius: 0.375rem;
+}
+

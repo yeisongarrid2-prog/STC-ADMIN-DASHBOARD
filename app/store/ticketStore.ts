@@ -22,6 +22,7 @@ export interface Ticket {
   created: string;
   priority: string;
   source: string;
+  content?: string;
   replies?: Reply[];
 }
 
