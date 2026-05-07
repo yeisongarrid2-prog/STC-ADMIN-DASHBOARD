@@ -1,0 +1,146 @@
+﻿URL: https://glpi.stcommunication.net/apirest.php/initSession
+Session: { session_token: 'l8c3duhmdatr4vc3pcf01ki1v1' }
+Relevant Search Options: [
+  [
+    "4",
+    {
+      "name": "Solicitante",
+      "table": "glpi_users",
+      "field": "name",
+      "datatype": "dropdown",
+      "nosearch": false,
+      "nodisplay": false,
+      "available_searchtypes": [
+        "contains",
+        "notcontains",
+        "equals",
+        "notequals"
+      ],
+      "uid": "Ticket.Ticket_User.User.name"
+    }
+  ],
+  [
+    "5",
+    {
+      "name": "T├®cnico",
+      "table": "glpi_users",
+      "field": "name",
+      "datatype": "dropdown",
+      "nosearch": false,
+      "nodisplay": false,
+      "available_searchtypes": [
+        "contains",
+        "notcontains",
+        "equals",
+        "notequals"
+      ],
+      "uid": "Ticket.Ticket_User.User.name"
+    }
+  ],
+  [
+    "6",
+    {
+      "name": "Asignado a un proveedor",
+      "table": "glpi_suppliers",
+      "field": "name",
+      "datatype": "dropdown",
+      "nosearch": false,
+      "nodisplay": false,
+      "available_searchtypes": [
+        "contains",
+        "notcontains",
+        "equals",
+        "notequals"
+      ],
+      "uid": "Ticket.Supplier_Ticket.Supplier.name"
+    }
+  ],
+  [
+    "8",
+    {
+      "name": "Grupo t├®cnico",
+      "table": "glpi_groups",
+      "field": "completename",
+      "datatype": "dropdown",
+      "nosearch": false,
+      "nodisplay": false,
+      "available_searchtypes": [
+        "contains",
+        "notcontains",
+        "equals",
+        "notequals",
+        "under",
+        "notunder"
+      ],
+      "uid": "Ticket.Group_Ticket.Group.completename"
+    }
+  ],
+  [
+    "58",
+    {
+      "name": "Solicitante",
+      "table": "glpi_users",
+      "field": "name",
+      "datatype": "itemlink",
+      "nosearch": false,
+      "nodisplay": false,
+      "available_searchtypes": [
+        "contains",
+        "notcontains",
+        "equals",
+        "notequals"
+      ],
+      "uid": "Ticket.TicketValidation.User.name"
+    }
+  ],
+  [
+    "71",
+    {
+      "name": "Grupo solicitante",
+      "table": "glpi_groups",
+      "field": "completename",
+      "datatype": "dropdown",
+      "nosearch": false,
+      "nodisplay": false,
+      "available_searchtypes": [
+        "contains",
+        "notcontains",
+        "equals",
+        "notequals",
+        "under",
+        "notunder"
+      ],
+      "uid": "Ticket.Group_Ticket.Group.completename"
+    }
+  ],
+  [
+    "95",
+    {
+      "name": "T├®cnico a cargo",
+      "table": "glpi_users",
+      "field": "name",
+      "datatype": "itemlink",
+      "nosearch": false,
+      "nodisplay": false,
+      "available_searchtypes": [
+        "contains",
+        "notcontains",
+        "equals",
+        "notequals"
+      ],
+      "uid": "Ticket.users_id_tech.TicketTask.User.name"
+    }
+  ],
+  [
+    "requester",
+    {
+      "name": "Solicitante"
+    }
+  ],
+  [
+    "assign",
+    {
+      "name": "Asignado a"
+    }
+  ]
+]

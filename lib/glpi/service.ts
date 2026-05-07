@@ -3,13 +3,10 @@ import { Ticket } from '@/app/store/ticketStore';
 
 export async function fetchGlpiTickets(): Promise<Ticket[]> {
   try {
-    // Filtramos tickets desde el 1 de Enero de 2026 y ordenamos por fecha de creación descendente.
-    // Usamos el endpoint de búsqueda para filtros más avanzados.
-    // Campo 15 es date_creation en GLPI.
     const query = [
-      'expand_dropdowns=true',
-      'range=0-100', // Traemos hasta 100 tickets
-      'sort=15',     // Ordenar por fecha de creación
+      'expand_dropdowns=1',
+      'range=0-100',
+      'sort=15',
       'order=DESC',
       'criteria[0][field]=15',
       'criteria[0][searchtype]=morethan',
@@ -17,8 +14,6 @@ export async function fetchGlpiTickets(): Promise<Ticket[]> {
     ].join('&');
 
     const rawTickets = await glpiFetch(`search/Ticket?${query}`);
-    
-    // El endpoint /search devuelve un objeto con 'data' y 'totalcount'
     const ticketsData = rawTickets.data || [];
 
     if (!Array.isArray(ticketsData)) {
@@ -27,16 +22,16 @@ export async function fetchGlpiTickets(): Promise<Ticket[]> {
     }
 
     return ticketsData.map((t: any) => ({
-      id: t[1].toString(), // En /search, los campos vienen indexados o por nombre dependiendo de la versión
-      type: t[14] === 1 ? 'incident' : 'request', // Campo 14 suele ser type
+      id: t[2]?.toString() || t[1]?.toString() || '?', // Usar ID real (campo 2)
+      type: t[14] === 1 ? 'incident' : 'request',
       title: t[1] || 'Sin asunto',
-      requester: t[4] || 'Desconocido', // Campo 4 suele ser requester
-      assignee: t[5] || 'Sin asignar',  // Campo 5 suele ser assignee
-      group: t[7] || 'General',         // Campo 7 suele ser group
-      status: mapGlpiStatus(parseInt(t[12])), // Campo 12 suele ser status
-      priority: mapGlpiPriority(parseInt(t[3])), // Campo 3 suele ser priority
-      dueDate: t[18] ? new Date(t[18]).toLocaleDateString() : 'Sin fecha', // Campo 18 suelen ser vencimiento
-      created: new Date(t[15]).toLocaleDateString(), // Campo 15 es date_creation
+      requester: t[4] || 'Desconocido', 
+      assignee: t[5] || 'Sin asignar',  
+      group: t[7] || t[8] || 'General', 
+      status: mapGlpiStatus(parseInt(t[12])),
+      priority: mapGlpiPriority(parseInt(t[3])),
+      dueDate: t[18] ? new Date(t[18]).toLocaleDateString() : 'Sin fecha',
+      created: t[15] ? new Date(t[15]).toLocaleDateString() : '?',
       source: 'GLPI'
     }));
   } catch (error) {

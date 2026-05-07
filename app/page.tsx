@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -149,7 +150,7 @@ export default function AnalyticsDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           
           {/* Tickets Vencidos - Rojo (Emergencia) */}
-          <div className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px]">
+          <Link href="/tickets?status=vencidos" className="bg-[#FFF1F2] rounded-lg shadow-sm border border-[#FECDD3] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#881337]">Tickets Vencidos</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
@@ -159,10 +160,10 @@ export default function AnalyticsDashboard() {
             <h3 className="text-4xl font-bold text-[#881337] mt-2">
               {isLoading ? "..." : (stats.open + stats.unassigned)}
             </h3>
-          </div>
+          </Link>
 
           {/* Vencen Hoy - Naranja/Amarillo (Advertencia) */}
-          <div className="bg-[#FFFBEB] rounded-lg shadow-sm border border-[#FEF3C7] p-4 flex flex-col justify-between relative min-h-[120px]">
+          <Link href="/tickets?filter=hoy" className="bg-[#FFFBEB] rounded-lg shadow-sm border border-[#FEF3C7] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#92400E]">Vencen Hoy</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
@@ -172,10 +173,10 @@ export default function AnalyticsDashboard() {
             <h3 className="text-4xl font-bold text-[#92400E] mt-2">
               {isLoading ? "..." : "0"}
             </h3>
-          </div>
+          </Link>
 
           {/* Sin Asignar - Naranja (Acción requerida) */}
-          <div className="bg-[#FFF7ED] rounded-lg shadow-sm border border-[#FFEDD5] p-4 flex flex-col justify-between relative min-h-[120px]">
+          <Link href="/tickets?filter=sin-asignar" className="bg-[#FFF7ED] rounded-lg shadow-sm border border-[#FFEDD5] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#9A3412]">Sin Asignar</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
@@ -185,10 +186,10 @@ export default function AnalyticsDashboard() {
             <h3 className="text-4xl font-bold text-[#9A3412] mt-2">
               {isLoading ? "..." : stats.unassigned}
             </h3>
-          </div>
+          </Link>
 
           {/* Tickets Abiertos - Azul (Volumen normal) */}
-          <div className="bg-[#EFF6FF] rounded-lg shadow-sm border border-[#DBEAFE] p-4 flex flex-col justify-between relative min-h-[120px]">
+          <Link href="/tickets?status=abierto" className="bg-[#EFF6FF] rounded-lg shadow-sm border border-[#DBEAFE] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#1E40AF]">Tickets Abiertos</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
@@ -198,10 +199,10 @@ export default function AnalyticsDashboard() {
             <h3 className="text-4xl font-bold text-[#1E40AF] mt-2">
               {isLoading ? "..." : stats.open}
             </h3>
-          </div>
+          </Link>
 
           {/* En Espera - Gris/Morado (Pausado) */}
-          <div className="bg-[#F8FAFC] rounded-lg shadow-sm border border-[#E2E8F0] p-4 flex flex-col justify-between relative min-h-[120px]">
+          <Link href="/tickets?status=espera" className="bg-[#F8FAFC] rounded-lg shadow-sm border border-[#E2E8F0] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#475569]">En Espera</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
@@ -211,10 +212,10 @@ export default function AnalyticsDashboard() {
             <h3 className="text-4xl font-bold text-[#475569] mt-2">
               {isLoading ? "..." : stats.assigned}
             </h3>
-          </div>
+          </Link>
 
           {/* Tickets en Seguimiento - Verde (Fluyendo) */}
-          <div className="bg-[#F0FDF4] rounded-lg shadow-sm border border-[#DCFCE7] p-4 flex flex-col justify-between relative min-h-[120px]">
+          <Link href="/tickets?filter=seguimiento" className="bg-[#F0FDF4] rounded-lg shadow-sm border border-[#DCFCE7] p-4 flex flex-col justify-between relative min-h-[120px] hover:shadow-md transition-shadow cursor-pointer">
             <div className="flex justify-between items-start">
               <p className="text-[13px] font-semibold text-[#166534]">Tickets en Seguimiento</p>
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center shadow-sm">
@@ -224,7 +225,7 @@ export default function AnalyticsDashboard() {
             <h3 className="text-4xl font-bold text-[#166534] mt-2">
               {isLoading ? "..." : "0"}
             </h3>
-          </div>
+          </Link>
 
         </div>
 
