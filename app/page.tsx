@@ -9,7 +9,7 @@ import {
 import { 
   Calendar, ChevronDown, Filter, Download, Plus, 
   GripHorizontal, MoreVertical, TrendingUp, TrendingDown,
-  LayoutDashboard, Settings2, Clock, AlertCircle, Eye, UserPlus, Ticket
+  LayoutDashboard, Settings2, Clock, AlertCircle, Eye, UserPlus, Ticket, PlayCircle
 } from 'lucide-react';
 import { fetchDashboardStats, fetchGlpiTickets } from '@/lib/glpi/service';
 
